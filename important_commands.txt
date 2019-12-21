@@ -1,0 +1,30 @@
+https://kubernetes.io/docs/tutorials/stateless-application/guestbook/
+
+delete all pods
+
+kubectl delete deployment -l app=redis
+kubectl delete service -l app=redis
+kubectl delete deployment -l app=guestbook
+kubectl delete service -l app=guestbook
+
+
+  securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+
+
+docker tag local-redis-master asia.gcr.io/places-api-244106/gcloud-redis-master;docker tag local-redis-slave asia.gcr.io/places-api-244106/gcloud-redis-slave
+
+docker push  asia.gcr.io/places-api-244106/gcloud-redis-master;docker push  asia.gcr.io/places-api-244106/gcloud-redis-slave
+
+
+kubectl apply -f redis-master-deployment.yaml;kubectl apply -f redis-master-service.yaml;kubectl apply -f redis-slave-deployment.yaml;kubectl apply -f redis-slave-service.yaml 
+
+kubectl exec -it redis-slave-cc4bbfdb9-nlxhv -- /bin/bash
+kubectl exec -it redis-slave-cc4bbfdb9-ffk9q -- /bin/bash
+
+redis-cli
+
+keys "*"
+
+get messages

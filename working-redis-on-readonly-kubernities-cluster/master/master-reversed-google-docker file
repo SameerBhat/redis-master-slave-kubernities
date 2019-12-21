@@ -1,0 +1,16 @@
+/bin/sh -c #(nop) EXPOSE 6379/tcp
+/bin/sh -c #(nop) CMD [redis-server /etc/redis/redis.conf]
+/bin/sh -c #(nop) WORKDIR /data
+/bin/sh -c #(nop) VOLUME [/data]
+/bin/sh -c cd /tmp &&   wget http://download.redis.io/redis-stable.tar.gz &&   tar xvzf redis-stable.tar.gz &&   cd redis-stable &&   make &&   make install &&   cp -f src/redis-sentinel /usr/local/bin &&   mkdir -p /etc/redis &&   cp -f *.conf /etc/redis &&   rm -rf /tmp/redis-stable* &&   sed -i 's/^\(bind .*\)$/# \1/' /etc/redis/redis.conf &&   sed -i 's/^\(daemonize .*\)$/# \1/' /etc/redis/redis.conf &&   sed -i 's/^\(dir .*\)$/# \1\ndir \/data/' /etc/redis/redis.conf &&   sed -i 's/^\(logfile .*\)$/# \1/' /etc/redis/redis.conf
+/bin/sh -c #(nop) CMD [bash]
+/bin/sh -c #(nop) WORKDIR /root
+/bin/sh -c #(nop) ENV HOME=/root
+/bin/sh -c #(nop) ADD dir:25f6a061a293b184718134396d0d1a090355f3b198e98e39a124f65cffe96fd7 in /root/.scripts
+/bin/sh -c #(nop) ADD file:e8c9982624bb2660e495615f662a83d206a38e95b1cb874b2586d015de13a0f6 in /root/.gitconfig
+/bin/sh -c #(nop) ADD file:d2a9c5a7a96726f1f204b4389a1d23c69772f154f27235defad9db947a1b032c in /root/.bashrc
+/bin/sh -c sed -i 's/# \(.*multiverse$\)/\1/g' /etc/apt/sources.list &&   apt-get update &&   apt-get -y upgrade &&   apt-get install -y build-essential &&   apt-get install -y software-properties-common &&   apt-get install -y byobu curl git htop man unzip vim wget &&   rm -rf /var/lib/apt/lists/*
+/bin/sh -c #(nop) CMD [/bin/bash]
+/bin/sh -c sed -i 's/^#\s*\(deb.*universe\)$/\1/g' /etc/apt/sources.list
+/bin/sh -c echo '#!/bin/sh' > /usr/sbin/policy-rc.d  && echo 'exit 101' >> /usr/sbin/policy-rc.d  && chmod +x /usr/sbin/policy-rc.d   && dpkg-divert --local --rename --add /sbin/initctl  && cp -a /usr/sbin/policy-rc.d /sbin/initctl  && sed -i 's/^exit.*/exit 0/' /sbin/initctl   && echo 'force-unsafe-io' > /etc/dpkg/dpkg.cfg.d/docker-apt-speedup   && echo 'DPkg::Post-Invoke { "rm -f /var/cache/apt/archives/*.deb /var/cache/apt/archives/partial/*.deb /var/cache/apt/*.bin || true"; };' > /etc/apt/apt.conf.d/docker-clean  && echo 'APT::Update::Post-Invoke { "rm -f /var/cache/apt/archives/*.deb /var/cache/apt/archives/partial/*.deb /var/cache/apt/*.bin || true"; };' >> /etc/apt/apt.conf.d/docker-clean  && echo 'Dir::Cache::pkgcache ""; Dir::Cache::srcpkgcache "";' >> /etc/apt/apt.conf.d/docker-clean   && echo 'Acquire::Languages "none";' > /etc/apt/apt.conf.d/docker-no-languages   && echo 'Acquire::GzipIndexes "true"; Acquire::CompressionTypes::Order:: "gz";' > /etc/apt/apt.conf.d/docker-gzip-indexes
+/bin/sh -c #(nop) ADD file:777fad733fc954c0c161670c48c10ea1787a6e5d544daa20e55d593279df3fa3 in /

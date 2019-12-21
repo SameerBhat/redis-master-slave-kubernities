@@ -1,0 +1,18 @@
+/bin/sh -c #(nop)  CMD ["/bin/sh" "-c" "/run.sh"]
+/bin/sh -c #(nop) COPY file:05c33cbb8836126158b4b2dabf18dbde031159b5dca80e63f364bc09d133c907 in /
+/bin/sh -c #(nop)  CMD ["redis-server"]
+/bin/sh -c #(nop)  EXPOSE 6379/tcp
+/bin/sh -c #(nop)  ENTRYPOINT ["docker-entrypoint.sh"]
+/bin/sh -c #(nop) COPY file:9c29fbe8374a97f9c2d953c9c8b7224554607eeb7a610a930844f2bec678265c in /usr/local/bin/
+/bin/sh -c #(nop) WORKDIR /data
+/bin/sh -c #(nop)  VOLUME [/data]
+/bin/sh -c mkdir /data && chown redis:redis /data
+/bin/sh -c set -ex;   buildDeps='   wget     gcc   libc6-dev   make  ';  apt-get update;  apt-get install -y $buildDeps --no-install-recommends;  rm -rf /var/lib/apt/lists/*;   wget -O redis.tar.gz "$REDIS_DOWNLOAD_URL";  echo "$REDIS_DOWNLOAD_SHA *redis.tar.gz" | sha256sum -c -;  mkdir -p /usr/src/redis;  tar -xzf redis.tar.gz -C /usr/src/redis --strip-components=1;  rm redis.tar.gz;   grep -q '^#define CONFIG_DEFAULT_PROTECTED_MODE 1$' /usr/src/redis/src/server.h;  sed -ri 's!^(#define CONFIG_DEFAULT_PROTECTED_MODE) 1$!\1 0!' /usr/src/redis/src/server.h;  grep -q '^#define CONFIG_DEFAULT_PROTECTED_MODE 0$' /usr/src/redis/src/server.h;   make -C /usr/src/redis -j "$(nproc)";  make -C /usr/src/redis install;   rm -r /usr/src/redis;   apt-get purge -y --auto-remove $buildDeps
+/bin/sh -c #(nop)  ENV REDIS_DOWNLOAD_SHA=6eaacfa983b287e440d0839ead20c2231749d5d6b78bbe0e0ffa3a890c59ff26
+/bin/sh -c #(nop)  ENV REDIS_DOWNLOAD_URL=http://download.redis.io/releases/redis-3.2.9.tar.gz
+/bin/sh -c #(nop)  ENV REDIS_VERSION=3.2.9
+/bin/sh -c set -ex;   fetchDeps='ca-certificates wget';  apt-get update;  apt-get install -y --no-install-recommends $fetchDeps;  rm -rf /var/lib/apt/lists/*;   dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')";  wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch";  wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch.asc";  export GNUPGHOME="$(mktemp -d)";  gpg --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4;  gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu;  rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc;  chmod +x /usr/local/bin/gosu;  gosu nobody true;   apt-get purge -y --auto-remove $fetchDeps
+/bin/sh -c #(nop)  ENV GOSU_VERSION=1.10
+/bin/sh -c groupadd -r redis && useradd -r -g redis redis
+/bin/sh -c #(nop)  CMD ["bash"]
+/bin/sh -c #(nop) ADD file:9f2ffbca4af360bf690b4594501908bc985dfce32953ad8b733fc2a290b75a80 in /
