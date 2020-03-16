@@ -1,0 +1,10 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: redis-master-ingress
+spec:
+  rules:
+  - host: ingress.trickfy.com
+  backend:
+    serviceName: redis-master
+    servicePort: 6379

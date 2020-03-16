@@ -1,11 +1,27 @@
 https://kubernetes.io/docs/tutorials/stateless-application/guestbook/
 
 delete all pods
-
+kubectl delete all --all
 kubectl delete deployment -l app=redis
 kubectl delete service -l app=redis
 kubectl delete deployment -l app=guestbook
 kubectl delete service -l app=guestbook
+
+
+kubectl delete deployment -l app=helloworld-v1;
+kubectl delete service -l app=helloworld-v1;
+kubectl delete deployment -l app=helloworld-v2;
+kubectl delete service -l app=helloworld-v2;
+kubectl delete service -l app=echoheaders;
+
+kubectl delete ReplicationController -l app=echoheaders;
+kubectl delete Ingress helloworld-rules;
+kubectl delete DaemonSet nginx-ingress-controller;
+
+
+kubectl delete ConfigMap -l app=ingress-nginx;
+kubectl delete ConfigMap -l app=tcp-services;
+kubectl delete ConfigMap -l app=udp-services;
 
 
   securityContext:
@@ -14,14 +30,17 @@ kubectl delete service -l app=guestbook
 
 
 docker tag local-redis-master asia.gcr.io/places-api-244106/gcloud-redis-master;docker tag local-redis-slave asia.gcr.io/places-api-244106/gcloud-redis-slave
-docker tag php-redis-guestbook-frontend asia.gcr.io/places-api-244106/gcloud-php-redis-guestbook-frontend
-
-docker push  asia.gcr.io/places-api-244106/gcloud-redis-master;docker push  asia.gcr.io/places-api-244106/gcloud-redis-slave
 
 
-kubectl apply -f redis-master-deployment.yaml;kubectl apply -f redis-master-service.yaml;kubectl apply -f redis-slave-deployment.yaml;kubectl apply -f redis-slave-service.yaml;kubectl apply -f frontend-deployment.yaml;kubectl apply -f frontend-service.yaml;
+docker build . -t php-redis-guestbook-frontend
+docker tag php-redis-guestbook-frontend asia.gcr.io/places-api-244106/gcloud-php-redis-guestbook-frontend;docker push  asia.gcr.io/places-api-244106/gcloud-php-redis-guestbook-frontend;
 
-kubectl exec -it frontend-577c89d786-4dgbv  -- /bin/bash
+
+kubectl apply -f redis-master-deployment.yaml;kubectl apply -f redis-master-service.yaml;kubectl apply -f redis-slave-deployment.yaml;kubectl apply -f redis-slave-service.yaml;
+
+kubectl apply -f frontend-deployment.yaml;kubectl apply -f frontend-service.yaml;
+
+kubectl exec -it frontend-577c89d786-9g5gd  -- /bin/bash
 kubectl exec -it redis-slave-cc4bbfdb9-f7j4c -- /bin/bash
 kubectl exec -it redis-slave-cc4bbfdb9-qp97z -- /bin/bash
 
